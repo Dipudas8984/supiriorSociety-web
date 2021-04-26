@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+{% block content %}
+<!-- <h4 class="mb-4">All Users :</h4> -->
+{% for user in users %}
+    <article class="media">
+        <a href="{{ url_for('user_account', username=user.username) }}"><img class="rounded-circle user-img" src="{{ url_for('static', filename='profile_pics/' + user.image_file) }}"></a>
+        <div class="media-body">
+          <div class="">
+            <a style="text-decoration:none" href="{{ url_for('user_account', username=user.username) }}"><h4>{{ user.fullname }}</h4></a>
+              
+            <a class="mr-2" href="{{ url_for('user_posts', username=user.username) }}">{{ user.username }}</a>
+            <small class="text-muted">Joined At :{{ user.date_joined.strftime(' %d-%m-%Y  -  %H:%M %p ') }}</small>
+          </div>
+        </div>
+      </article>
+      <div class="my-4 article-metadata"></div>
+{% endfor %}
+{% endblock content %}

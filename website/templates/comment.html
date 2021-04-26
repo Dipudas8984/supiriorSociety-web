@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <article class="media content-section">
+    <a href="{{ url_for('user_account', username=post.author.username) }}"><img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}"></a>
+    <div class="media-body">
+      <div class="article-metadata">
+        <a class="mr-2" href="{{ url_for('user_posts', username=post.author.username) }}">{{ post.author.username }}</a>
+        <small class="text-muted">{{ post.date_posted.strftime('%H:%M %p -  %d-%m-%Y') }}</small>
+      </div>
+      <h4 class="article-title text">{{ post.title }}</h4>
+      <p class="article-content text">{{ post.content }}</p>
+        </div>
+    </div>
+  </article>
+  </div>
+<!-- {% block add_comment %} -->
+<div id="comment" class="">
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group comment">
+            <legend class=" mb-4 text">{{ legend }}</legend>
+            <div class="form-group text comment-box">
+                {{ form.content.label(class="form-control-label") }}
+                {% if form.content.errors %}
+                    {{ form.content(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.content.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.content(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </fieldset>
+    </form>
+</div>
+<!-- {% endblock add_comment %} -->
+{% endblock content %}

@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="content-section text">
+        <div class="media">
+            <img class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + user.image_file ) }}">
+            <div class="media-body">
+                <h2 class=""><a  style="text-decorations:none; color:inherit;" class ="article-title" href="{{ url_for('user_posts', username=user.username) }}">{{ user.username }}</a> </h2>    
+                <small>@{{ user.role }}</small>
+            </div>
+        </div>
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Account Info</legend>
+                <h5>Name : {{ user.fullname }}</h5>
+                <h5>Email : {{ user.email }}</h5>
+                <div class="my-4"></div>
+                <h5><strong> About:</strong></h5>
+                <p>{{ user.about }}</p>
+
+{% endblock content %}

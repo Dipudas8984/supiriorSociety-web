@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1 class="mb-3">{{ user.username }} ({{ posts.total }})</h1>
+    {% for post in posts.items %}
+    <div class="">
+        <article class="media">
+          <a href="{{ url_for('user_account', username=post.author.username) }}"><img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}"></a>
+          <div class="media-body">
+            <div class="">
+              <a class="mr-2" href="{{ url_for('user_posts', username=post.author.username) }}">{{ post.author.username }}</a><br>
+              <small class="text-muted">{{ post.date_posted.strftime('%H:%M %p -  %d-%m-%Y') }}</small>
+            </div>
+          </div>
+        </article>
+            {% if current_user.mode %}
+              
+            <h5><a style="color:#ffffff; text-decoration:none" class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></h5>
+            {% for word in post.content.split() %}
+            {% if word.startswith("https://") or word.startswith("http://") %}
+            <a href="{{word}}">{{word}}</a>
+            {% elif word.startswith("@")%}
+            <a href="{{ url_for('user_account', username=word.replace('@','')) }}">{{word}}</a>
+            {% elif word.startswith("#") %}
+            <a href="">{{word}}</a>
+            {% else %}
+              <a style="color:#ffffff; text-decoration:none" href="{{ url_for('post', post_id=post.id) }}">{{word}}</a>
+            {% endif %}
+          {% endfor %}
+            {% else %}
+            <h5><a style="color:#000000; text-decoration:none" class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></h5>
+            {% for word in post.content.split() %}
+            {% if word.startswith("https://") or word.startswith("http://") %}
+            <a href="{{word}}">{{word}}</a>
+            {% elif word.startswith("@")%}
+            <a href="{{ url_for('user_account', username=word.replace('@','')) }}">{{word}}</a>
+            {% elif word.startswith("#") %}
+            <a href="">{{word}}</a>
+            {% else %}
+              <a style="color:#000000; text-decoration:none" href="{{ url_for('post', post_id=post.id) }}">{{word}}</a>
+            {% endif %}
+          {% endfor %}
+              
+            {% endif %}
+            <div class="my-4 article-metadata"></div>
+          </div>
+          <br>
+    {% endfor %}
+    <div class="my-4"></div>
+    {% if current_user.mode %}
+      
+    {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if page_num %}
+        {% if posts.page == page_num %}
+          <a class="btn btn-secondary mb-4" href="{{ url_for('user_posts', username=user.username, page=page_num) }}">{{ page_num }}</a>
+        {% else %}
+          <a class="btn btn-outline-secondary mb-4" href="{{ url_for('user_posts', username=user.username, page=page_num) }}">{{ page_num }}</a>
+        {% endif %}
+      {% else %}
+        ...
+      {% endif %}
+    {% endfor %}
+    {% else %}
+    {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if page_num %}
+        {% if posts.page == page_num %}
+          <a class="btn btn-info mb-4" href="{{ url_for('user_posts', username=user.username, page=page_num) }}">{{ page_num }}</a>
+        {% else %}
+          <a class="btn btn-outline-info mb-4" href="{{ url_for('user_posts', username=user.username, page=page_num) }}">{{ page_num }}</a>
+        {% endif %}
+      {% else %}
+        ...
+      {% endif %}
+    {% endfor %}
+      
+    {% endif %}
+{% endblock content %}

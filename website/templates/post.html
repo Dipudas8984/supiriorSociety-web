@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+{% block auto_reload %}
+  <meta http-equiv="refresh" content="20">
+  
+{% endblock auto_reload %}
+{% block content %}
+<div class="text">
+  <article class="media">
+    <a href="{{ url_for('user_account', username=post.author.username) }}"><img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}"></a>
+    <div class="media-body">
+      <div class="">
+        <a class="mr-2" href="{{ url_for('user_posts', username=post.author.username) }}">{{ post.author.username }}</a><br>
+        <small class="text-muted">{{ post.date_posted.strftime('%H:%M %p -  %d-%m-%Y') }}</small>
+      </div>
+          </div>
+      </article>
+      <h5 class="article-title text">{{ post.title }}</h5>
+      <p>
+      {% for word in post.content.split() %}
+          {% if word.startswith("https://") or word.startswith("http://") %}
+            <a href="{{word}}">{{word}}</a>
+            {% elif word.startswith("@")%}
+            <a href="{{ url_for('user_account', username=word.replace('@','')) }}">{{word}}</a>
+            {% elif word.startswith("#") %}
+            <a href="">{{word}}</a>
+          {% else %}
+              {{word}}
+          {% endif %}
+        {% endfor %}
+      </p>
+        {% if post.author == current_user %}
+          <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('update_post', post_id=post.id) }}">Update</a>
+          <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#deleteModal">Delete</button>
+      {% endif %}
+      <!-- <a href="{{ url_for('comment', post_id=post.id) }}">
+      <button class="btn btn-outline-primary btn-sm" type="button"><small>Comment</small> </button>
+      </a> -->
+      <div class="my-4 article-metadata"></div>
+    </div>
+  <!-- Modal -->
+  <div class="modal fade " id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Delete Post?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Delete">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="my-2" ><h5>Comments</h5></div><br>
+  {% for comment in comments %}
+        <!-- {% if post.author.username==current_user.username %}
+          <div class="container">
+        {% else %}
+          <div class="">
+        {% endif %} -->
+        <div class="">
+          <div class="media text">
+          <a href="{{ url_for('user_account', username=comment.commenter.username) }}"><img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + comment.commenter.image_file) }}"></a>
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="{{ url_for('user_posts', username=comment.commenter.username) }}">{{ comment.commenter.username }}</a><br>
+              <small class="text-muted">{{ comment.date_posted.strftime('%H:%M %p -  %d-%m-%Y') }}</small>
+            </div>
+            <p>
+            {% for word in comment.content.split() %}
+              {% if word.startswith("https://") or word.startswith("http://") %}
+                <a href="{{word}}">{{word}}</a>
+              {% elif word.startswith("@") or word.startswith("#") %}
+                <a href="">{{word}}</a>
+              {% else %}
+                {{word}}
+            {% endif %}
+          {% endfor %}</p>
+            
+          </div>
+        </div>
+        </div>
+        <br>
+      <!-- </div> -->
+    {% endfor %}
+    <a href="{{ url_for('comment', post_id=post.id) }}" class="float">
+      <i class="fa fa-commenting my-float"></i>
+    </a>
+
+  <!-- {% block add_comment %}
+  
+  {% endblock add_comment %} -->
+{% endblock content %}
