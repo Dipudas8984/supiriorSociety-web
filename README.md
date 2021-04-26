@@ -1,4 +1,4 @@
 #s upiriorsociety-web
 
 ### The Development of society-web 
-### Hosted at [supiriorsociety.pythonanywhere.com/](supiriorsociety.pythonanywhere.com/) 
+### Hosted at [supiriorsociety](https://supiriorsociety.pythonanywhere.com/) 
